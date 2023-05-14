@@ -1,49 +1,48 @@
-#Aryan Shirbhate BS22B009
-# Codon table
-codontable = {
-    "ATA": "I", "ATC": "I", "ATT": "I", "ATG": "M",
-    "ACA": "T", "ACC": "T", "ACG": "T", "ACT": "T",
-    "AAC": "N", "AAT": "N", "AAA": "K", "AAG": "K",
-    "AGC": "S", "AGT": "S", "AGA": "R", "AGG": "R",
-    "CTA": "L", "CTC": "L", "CTG": "L", "CTT": "L",
-    "CCA": "P", "CCC": "P", "CCG": "P", "CCT": "P",
-    "CAC": "H", "CAT": "H", "CAA": "Q", "CAG": "Q",
-    "CGA": "R", "CGC": "R", "CGG": "R", "CGT": "R",
-    "GTA": "V", "GTC": "V", "GTG": "V", "GTT": "V",
-    "GCA": "A", "GCC": "A", "GCG": "A", "GCT": "A",
-    "GAC": "D", "GAT": "D", "GAA": "E", "GAG": "E",
-    "GGA": "G", "GGC": "G", "GGG": "G", "GGT": "G",
-    "TCA": "S", "TCC": "S", "TCG": "S", "TCT": "S",
-    "TTC": "F", "TTT": "F", "TTA": "L", "TTG": "L",
-    "TAC": "Y", "TAT": "Y", "TAA": "*", "TAG": "*",
-    "TGC": "C", "TGT": "C", "TGA": "*", "TGG": "W"
+# Aryan Shirbhate BS22B009
+codon_table = {
+    "ATA": "Ile", "ATC": "Ile", "ATT": "Ile", "ATG": "Met",
+    "ACA": "Thr", "ACC": "Thr", "ACG": "Thr", "ACT": "Thr",
+    "AAC": "Asn", "AAT": "Asn", "AAA": "Lys", "AAG": "Lys",
+    "AGC": "Ser", "AGT": "Ser", "AGA": "Arg", "AGG": "Arg",
+    "CTA": "Leu", "CTC": "Leu", "CTG": "Leu", "CTT": "Leu",
+    "CCA": "Pro", "CCC": "Pro", "CCG": "Pro", "CCT": "Pro",
+    "CAC": "His", "CAT": "His", "CAA": "Gln", "CAG": "Gln",
+    "CGA": "Arg", "CGC": "Arg", "CGG": "Arg", "CGT": "Arg",
+    "GTA": "Val", "GTC": "Val", "GTG": "Val", "GTT": "Val",
+    "GCA": "Ala", "GCC": "Ala", "GCG": "Ala", "GCT": "Ala",
+    "GAC": "Asp", "GAT": "Asp", "GAA": "Glu", "GAG": "Glu",
+    "GGA": "Gly", "GGC": "Gly", "GGG": "Gly", "GGT": "Gly",
+    "TCA": "Ser", "TCC": "Ser", "TCG": "Ser", "TCT": "Ser",
+    "TTC": "Phe", "TTT": "Phe", "TTA": "Leu", "TTG": "Leu",
+    "TAC": "Tyr", "TAT": "Tyr", "TAA": "Stop", "TAG": "Stop",
+    "TGC": "Cys", "TGT": "Cys", "TGA": "Stop", "TGG": "Trp",
 }
 
-def translate(dnaseq):
-    proteinseq = ['', '', '', '', '', '']
-    for i in range(3):
-        for j in range(i, len(dnaseq)-2, 3):
-            codon = dnaseq[j:j+3]
-            aa = codontable.get(codon, 'X')
-            proteinseq[i] += aa
-        
-    revcomp = reversecomplement(dnaseq)
-    for i in range(3):
-        for j in range(i, len(revcomp)-2, 3):
-            codon = revcomp[j:j+3]
-            aa = codontable.get(codon, 'X')
-            proteinseq[i+3] += aa
-            
-    return proteinseq
+# Prompt the user to enter a DNA sequence
+dna_seq = input("Enter a DNA sequence: ").upper()
 
-def reversecomplement(dnaseq):
-    complement = {"A": "T", "C": "G", "G": "C", "T": "A"}
-    revcomp = ''.join([complement.get(base, 'N') for base in reversed(dnaseq)])
-    return revcomp
+# Get the reverse complement of the DNA sequence
+rev_seq = dna_seq.translate(str.maketrans("ATCG", "TAGC"))[::-1]
 
-# Example usage
-dnaseq = 'ATTTCCAG'
-proteinseq = translate(dnaseq)
+# Initialize lists to store the six reading frames
+frames = ["", "", "", "", "", ""]
 
-for i, seq in enumerate(proteinseq):
-    print(f"In reading frame {i+1}: {seq}")
+# Perform translation on each of the three forward frames
+for i in range(3):
+    frame = dna_seq[i:]
+    for j in range(0, len(frame), 3):
+        codon = frame[j:j+3]
+        if len(codon) == 3:
+            frames[i] += codon_table[codon]
+
+# Perform translation on each of the three reverse frames
+for i in range(3):
+    frame = rev_seq[i:]
+    for j in range(0, len(frame), 3):
+        codon = frame[j:j+3]
+        if len(codon) == 3:
+            frames[i+3] += codon_table[codon]
+
+# Print the protein products in all six frames
+for i in range(6):
+    print(f"In frame {i+1} (after appropriate deletion) the protein sequence is: {frames[i]}")
