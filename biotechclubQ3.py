@@ -1,5 +1,5 @@
 # Aryan Shirbhate BS22B009
-codon_table = {
+codontable = {
     "ATA": "Ile", "ATC": "Ile", "ATT": "Ile", "ATG": "Met",
     "ACA": "Thr", "ACC": "Thr", "ACG": "Thr", "ACT": "Thr",
     "AAC": "Asn", "AAT": "Asn", "AAA": "Lys", "AAG": "Lys",
@@ -18,30 +18,30 @@ codon_table = {
     "TGC": "Cys", "TGT": "Cys", "TGA": "Stop", "TGG": "Trp",
 }
 
-# Prompt the user to enter a DNA sequence
-dna_seq = input("Enter a DNA sequence: ").upper()
+# Enter a DNA sequence
+dnaseq = input("Enter a DNA sequence: ").upper()
 
 # Get the reverse complement of the DNA sequence
-rev_seq = dna_seq.translate(str.maketrans("ATCG", "TAGC"))[::-1]
+revseq = dnaseq.translate(str.maketrans("ATCG", "TAGC"))[::-1]
 
-# Initialize lists to store the six reading frames
+# Initialize
 frames = ["", "", "", "", "", ""]
 
-# Perform translation on each of the three forward frames
+# Perform translation 
 for i in range(3):
-    frame = dna_seq[i:]
+    frame = dnaseq[i:]
     for j in range(0, len(frame), 3):
         codon = frame[j:j+3]
         if len(codon) == 3:
-            frames[i] += codon_table[codon]
+            frames[i] += codontable[codon]
 
 # Perform translation on each of the three reverse frames
 for i in range(3):
-    frame = rev_seq[i:]
+    frame = revseq[i:]
     for j in range(0, len(frame), 3):
         codon = frame[j:j+3]
         if len(codon) == 3:
-            frames[i+3] += codon_table[codon]
+            frames[i+3] += codontable[codon]
 
 # Print the protein products in all six frames
 for i in range(6):
